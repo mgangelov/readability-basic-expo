@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet, Platform, Button } from 'react-native';
 
-export default ({ children }) => {
+export default ({ children, onPress }) => {
   return (
     Platform.OS === 'web' ?
-      <Button title="new" /> :
-      <TouchableOpacity>
+      <Button title="new" onPress={onPress} /> :
+      <TouchableOpacity onPress={onPress}>
         <View style={{
           ...customStyles.button,
           margin: 8

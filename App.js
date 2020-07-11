@@ -15,34 +15,69 @@ import {
   QuillJsEditorScreen,
   CompareParseScreen,
   AllRecipesScreen,
-  HomeScreen
+  HomeScreen,
+  AddRecipeScreen
 } from './src/components/screens';
+import { Button } from 'react-native';
 
 const Stack = createStackNavigator();
+const AllRecipesStack = createStackNavigator();
+const AddRecipeStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const MainBody = ({ navigation }) => {
   return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={HomeScreen} options={{
-        headerTitle: 'Test header title',
-        headerRight: () => (
-          <StackHeaderMobileButton>
-            <AddIcon width={"30rem"} height={"30rem"} />
-          </StackHeaderMobileButton>
-        )
-      }}/>
-      <Stack.Screen name="Compare" component={CompareParseScreen} options={{title: 'Compare parsings'}}/>
-      <Stack.Screen name="Quill" component={QuillJsEditorScreen} options={{title: 'Additional modifications'}}/>
+    <Stack.Navigator mode="modal" initialRouteName="Home">
+      <Stack.Screen
+        name="HomeInStack"
+        component={HomeScreen}
+        options={
+          {
+            headerTitle: 'Test header title',
+            headerRight: () => (
+              <StackHeaderMobileButton onPress={() => navigation.navigate('AddRecipeWorkflow', { screen: 'Step1' })}>
+                <AddIcon width={"30rem"} height={"30rem"} />
+              </StackHeaderMobileButton>
+            )
+          }
+        }
+      />
+      <Stack.Screen
+        name="AddRecipeWorkflow"
+        component={AddRecipePage}
+        options={
+          {
+            headerShown: false
+          }
+        }
+      />
     </Stack.Navigator>
   );
 }
 
-const AllRecipesPage = ({navigation}) => {
+const AllRecipesPage = ({ navigation }) => {
   return (
-    <Stack.Navigator screenOptions={{title: 'Recipes'}}>
-      <Stack.Screen name="Recipes" component={AllRecipesScreen}/>
-    </Stack.Navigator>
+    <AllRecipesStack.Navigator screenOptions={{ title: 'Recipes' }}>
+      <AllRecipesStack.Screen name="Recipes" component={AllRecipesScreen} />
+    </AllRecipesStack.Navigator>
+  );
+}
+
+const AddRecipePage = ({ navigation }) => {
+  return (
+    <AddRecipeStack.Navigator>
+      <AddRecipeStack.Screen
+        name="Step1"
+        component={AddRecipeScreen}
+        options={
+          {
+            title: 'Add recipe'
+          }
+        }
+      />
+      <AddRecipeStack.Screen name="Compare" component={CompareParseScreen} options={{ title: 'Compare parsings' }} />
+      <AddRecipeStack.Screen name="Quill" component={QuillJsEditorScreen} options={{ title: 'Additional modifications' }} />
+    </AddRecipeStack.Navigator>
   );
 }
 
@@ -63,18 +98,18 @@ export default function App() {
           {
             title: 'Home',
             tabBarIcon: ({ focused, size, color }) => {
-              return (<Kitchen3 width={'100%'} height={'100%'}/>);
+              return (<Kitchen3 width={'100%'} height={'100%'} />);
             }
           }
-        }/>
+        } />
         <Tab.Screen name="Recipes" component={AllRecipesPage} options={
           {
             title: 'Recipes',
             tabBarIcon: ({ focused, size, color }) => {
-              return <RecipeBook width={'100%'} height={'100%'}/>;
+              return <RecipeBook width={'100%'} height={'100%'} />;
             }
           }
-        }/>
+        } />
       </Tab.Navigator>
     </NavigationContainer>
   );
